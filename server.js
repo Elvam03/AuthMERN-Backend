@@ -9,7 +9,7 @@ const User = require("./models/User"); // Ensure the User model exists
 const authRoutes = require("./routes/authRoutes");
 
 dotenv.config();
-app.use(cors({ origin: "*" }));
+
 
 const app = express();
 
@@ -17,6 +17,7 @@ const app = express();
 // app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors({ origin: "*" }));
 
 // Connect to MongoDB
 mongoose
