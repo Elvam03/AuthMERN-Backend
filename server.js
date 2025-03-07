@@ -34,6 +34,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+
 // Configure Multer for Cloudinary Storage
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
@@ -119,6 +120,7 @@ app.put('/api/profile/:userId', async (req, res) => {
   }
 });
 
+app.use("/api/profile", require("./routes/profileRoutes"));
 
 // Test API
 app.get("/", (req, res) => {

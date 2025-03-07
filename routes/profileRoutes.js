@@ -86,4 +86,44 @@ router.post("/api/profile/upload-backgroundImage", upload.single("backgroundImag
     }
 });
 
+// Get user profile
+router.get("/:userId", async (req, res) => {
+    try {
+        const user = await User.findById(req.params.userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        res.json({
+            firstName: user.firstName,
+            secondName: user.secondName,
+            email: user.email,
+            age: user.age,
+            phone: user.phone,
+            location: user.location,
+            profileImage: user.profileImage,
+            backgroundImage: user.backgroundImage
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+});
+
+// Update user profile
+router.put("/:userId", async (req, res) => {
+    try {
+        const { age, phone, location, profileImage, backgroundImage } = req.body;
+        
+        const updatedUser = await User.findByIdAndUpdate(
+            req.params.userId,
+            { age, phone, location, profileImage, backgroundImage },
+            { new: true }
+        );
+
+        if (!updatedUser) return res.status(404).json({ message: "User not found" });
+
+        res.json({ message: "Profile updated successfully", user: updatedUser });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+});
+
 module.exports = router;
