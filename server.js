@@ -7,6 +7,7 @@ const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("cloudinary").v2;
 const User = require("./models/User"); // Ensure the User model exists
 const authRoutes = require("./routes/authRoutes");
+const profileRoutes = require("./routes/profileRoutes");
 
 dotenv.config();
 
@@ -26,6 +27,8 @@ mongoose
   .catch((err) => console.log(err));
 
   app.use("/api/auth", authRoutes);
+app.use("/api/profile", profileRoutes);
+
   
 // Cloudinary Configuration
 cloudinary.config({
@@ -120,7 +123,6 @@ app.put('/api/profile/:userId', async (req, res) => {
   }
 });
 
-app.use("/api/profile", require("./routes/profileRoutes"));
 
 // Test API
 app.get("/", (req, res) => {
