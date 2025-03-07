@@ -110,20 +110,30 @@ router.get("/:userId", async (req, res) => {
 // Update user profile
 router.put("/:userId", async (req, res) => {
     try {
+        console.log("Received update request:", req.body); // Debugging line
+
         const { age, phone, location, profileImage, backgroundImage } = req.body;
-        
+
         const updatedUser = await User.findByIdAndUpdate(
             req.params.userId,
-            { age, phone, location, profileImage, backgroundImage },
-            { new: true }
+            { 
+                age, 
+                phone, 
+                location, 
+                profileImage, 
+                backgroundImage 
+            },
+            { new: true, runValidators: true }
         );
 
         if (!updatedUser) return res.status(404).json({ message: "User not found" });
 
         res.json({ message: "Profile updated successfully", user: updatedUser });
     } catch (error) {
+        console.error("Update error:", error); // Debugging line
         res.status(500).json({ message: "Server error", error: error.message });
     }
 });
+
 
 module.exports = router;
