@@ -9,11 +9,12 @@ const User = require("./models/User"); // Ensure the User model exists
 const authRoutes = require("./routes/authRoutes");
 
 dotenv.config();
+app.use(cors({ origin: "*" }));
 
 const app = express();
 
 // Middleware
-app.use(cors());
+// app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -85,7 +86,7 @@ app.post("/api/profile/upload-backgroundImage", upload.single("backgroundImage")
 });
 
 // ✅ Fetch User Profile Data
-app.get("/api/profile/:userId", async (req, res) => {
+app.get("/api/profile/userId", async (req, res) => {
   try {
     const { userId } = req.params;
     const user = await User.findById(userId);
