@@ -112,11 +112,13 @@ router.put("/:userId", async (req, res) => {
     try {
         console.log("Received update request:", req.body); // Debugging line
 
-        const { age, phone, location, profileImage, backgroundImage } = req.body;
+        const { firstName, secondName, age, phone, location, profileImage, backgroundImage } = req.body;
 
         const updatedUser = await User.findByIdAndUpdate(
             req.params.userId,
             { 
+                firstName,
+                secondName,
                 age, 
                 phone, 
                 location, 
