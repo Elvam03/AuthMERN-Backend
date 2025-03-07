@@ -101,6 +101,25 @@ app.get("/api/profile/:userId", async (req, res) => {
   }
 });
 
+app.put('/api/profile/:userId', async (req, res) => {
+  const { userId } = req.params;
+  const { profileImage, backgroundImage } = req.body;
+
+  try {
+      const user = await User.findById(userId);
+      if (!user) return res.status(404).json({ message: "User not found" });
+
+      if (profileImage) user.profileImage = profileImage;
+      if (backgroundImage) user.backgroundImage = backgroundImage;
+
+      await user.save();
+      res.status(200).json({ message: "Profile updated successfully", user });
+  } catch (error) {
+      res.status(500).json({ message: "Server error", error });
+  }
+});
+
+
 // Test API
 app.get("/", (req, res) => {
   res.send("API is running...");
