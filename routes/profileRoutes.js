@@ -107,23 +107,22 @@ router.get("/:userId", async (req, res) => {
     }
 });
 
-// Update user profile
 router.put("/:userId", async (req, res) => {
     try {
         console.log("Received update request:", req.body); // Debugging line
 
-        const { firstName, secondName, age, phone, location, profileImage, backgroundImage } = req.body;
+        const { age, phone, location, profileImage, backgroundImage } = req.body;
 
         const updatedUser = await User.findByIdAndUpdate(
             req.params.userId,
             { 
-                firstName,
-                secondName,
-                age, 
-                phone, 
-                location, 
-                profileImage, 
-                backgroundImage 
+                $set: { 
+                    ...(age && { age }), 
+                    ...(phone && { phone }), 
+                    ...(location && { location }), 
+                    ...(profileImage && { profileImage }), 
+                    ...(backgroundImage && { backgroundImage }) 
+                }
             },
             { new: true, runValidators: true }
         );
@@ -132,10 +131,9 @@ router.put("/:userId", async (req, res) => {
 
         res.json({ message: "Profile updated successfully", user: updatedUser });
     } catch (error) {
-        console.error("Update error:", error); // Debugging line
+        console.error("Update error:", error);
         res.status(500).json({ message: "Server error", error: error.message });
     }
 });
-
 
 module.exports = router;
