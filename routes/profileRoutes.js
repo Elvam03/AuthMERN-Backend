@@ -109,27 +109,20 @@ router.get("/:userId", async (req, res) => {
 
 router.put("/:userId", async (req, res) => {
     try {
-        console.log("Received update request:", req.body); // Debugging line
+        console.log("Received update request:", req.body);
 
-        const { age, phone, location, profileImage, backgroundImage } = req.body;
+        const user = await User.findById(req.params.userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
 
-        const updatedUser = await User.findByIdAndUpdate(
-            req.params.userId,
-            { 
-                $set: { 
-                    ...(age && { age }), 
-                    ...(phone && { phone }), 
-                    ...(location && { location }), 
-                    ...(profileImage && { profileImage }), 
-                    ...(backgroundImage && { backgroundImage }) 
-                }
-            },
-            { new: true, runValidators: true }
-        );
+        user.age = req.body.age || user.age;
+        user.phone = req.body.phone || user.phone;
+        user.location = req.body.location || user.location;
+        user.profileImage = req.body.profileImage || user.profileImage;
+        user.backgroundImage = req.body.backgroundImage || user.backgroundImage;
 
-        if (!updatedUser) return res.status(404).json({ message: "User not found" });
+        await user.save();
 
-        res.json({ message: "Profile updated successfully", user: updatedUser });
+        res.json({ message: "Profile updated successfully", user });
     } catch (error) {
         console.error("Update error:", error);
         res.status(500).json({ message: "Server error", error: error.message });
