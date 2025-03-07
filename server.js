@@ -87,7 +87,7 @@ app.post("/api/profile/upload-backgroundImage", upload.single("backgroundImage")
 });
 
 // ✅ Fetch User Profile Data
-app.get("/api/profile/userId", async (req, res) => {
+app.get("/api/profile/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
     const user = await User.findById(userId);
