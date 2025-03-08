@@ -15,10 +15,16 @@ dotenv.config();
 const app = express();
 
 // Middleware
-// app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ origin: "*" }));
+// app.use(cors({ origin: "*" }));
+
+// Enable CORS
+app.use(cors({
+  origin: "https://auth-mern-frontend-one.vercel.app/", // Allow your frontend
+  methods: "GET,POST,PUT,DELETE",
+  credentials: true // Allow cookies, if needed
+}));
 
 // Connect to MongoDB
 mongoose
