@@ -36,7 +36,9 @@ router.post("/forgot-password", async (req, res) => {
   await user.save();
 
   // Send email with reset link
-  const resetLink = `https://authmern-backend-i3kc.onrender.com/reset-password/${token}`;
+  // const resetLink = `https://authmern-backend-i3kc.onrender.com/reset-password/${token}`;
+  const resetLink = `https://auth-mern-frontend-one.vercel.app/reset-password/${token}`;
+
   await transporter.sendMail({
       to: user.email,
       subject: "Password Reset",
@@ -47,9 +49,8 @@ router.post("/forgot-password", async (req, res) => {
 });
 
 // Reset password route
-router.post("/reset-password/:token", async (req, res) => {
-  const { token } = req.params;
-  const { newPassword } = req.body;
+router.post("/reset-password", async (req, res) => {
+  const { token, newPassword } = req.body;
 
   try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -59,10 +60,13 @@ router.post("/reset-password/:token", async (req, res) => {
           return res.status(400).json({ message: "Invalid or expired token" });
       }
 
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
-      user.password = hashedPassword;
+      // ✅ Remove reset token BEFORE updating the password
       user.resetToken = undefined;
       user.resetTokenExpires = undefined;
+      await user.save();
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      user.password = hashedPassword;
       await user.save();
 
       res.json({ message: "Password reset successfully" });
@@ -70,6 +74,7 @@ router.post("/reset-password/:token", async (req, res) => {
       res.status(500).json({ message: "Invalid or expired token" });
   }
 });
+
 
 
 router.post("/signup", async (req, res) => {
