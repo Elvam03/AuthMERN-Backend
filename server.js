@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Enable CORS
 app.use(cors({
-  origin: "https://auth-mern-frontend-one.vercel.app/", // Allow your frontend
+  origin: "https://auth-mern-frontend-one.vercel.app", // Allow your frontend
   methods: "GET,POST,PUT,DELETE",
   credentials: true // Allow cookies, if needed
 }));
