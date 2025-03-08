@@ -9,7 +9,9 @@ const UserSchema = new mongoose.Schema({
   phone: { type: String },
   location: { type: String },
   profileImage: { type: String },
-  backgroundImage: { type: String }
+  backgroundImage: { type: String },
+  resetToken: { type: String },
+  resetTokenExpires: { type: Date }
 });
 
 module.exports = mongoose.model("User", UserSchema);

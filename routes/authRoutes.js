@@ -2,8 +2,71 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const nodemailer = require("nodemailer");
 
 const router = express.Router();
+
+// Setup nodemailer
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+  }
+});
+
+// Request password reset
+router.post("/forgot-password", async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+
+  if (!user) {
+      return res.status(404).json({ message: "User not found" });
+  }
+
+  // Generate a token (valid for 1 hour)
+  const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+  user.resetToken = token;
+  user.resetTokenExpires = Date.now() + 3600000; // 1 hour from now
+  await user.save();
+
+  // Send email with reset link
+  const resetLink = `https://authmern-backend-i3kc.onrender.com/reset-password/${token}`;
+  await transporter.sendMail({
+      to: user.email,
+      subject: "Password Reset",
+      html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`
+  });
+
+  res.json({ message: "Password reset link sent to email" });
+});
+
+// Reset password route
+router.post("/reset-password/:token", async (req, res) => {
+  const { token } = req.params;
+  const { newPassword } = req.body;
+
+  try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const user = await User.findOne({ _id: decoded.userId, resetToken: token });
+
+      if (!user || user.resetTokenExpires < Date.now()) {
+          return res.status(400).json({ message: "Invalid or expired token" });
+      }
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      user.password = hashedPassword;
+      user.resetToken = undefined;
+      user.resetTokenExpires = undefined;
+      await user.save();
+
+      res.json({ message: "Password reset successfully" });
+  } catch (error) {
+      res.status(500).json({ message: "Invalid or expired token" });
+  }
+});
+
 
 router.post("/signup", async (req, res) => {
   try {
