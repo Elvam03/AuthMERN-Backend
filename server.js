@@ -19,11 +19,21 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // app.use(cors({ origin: "*" }));
 
-// Enable CORS
+const allowedOrigins = [
+  "https://auth-mern-frontend-one.vercel.app", 
+  "http://localhost:5173" // Allow localhost for development
+];
+
 app.use(cors({
-  origin: "https://auth-mern-frontend-one.vercel.app", // Allow your frontend
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: "GET,POST,PUT,DELETE",
-  credentials: true // Allow cookies, if needed
+  credentials: true // Allow cookies if needed
 }));
 
 // Connect to MongoDB
