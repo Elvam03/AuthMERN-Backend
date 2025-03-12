@@ -8,6 +8,8 @@ const profileRoutes = require("./routes/profileRoutes");
 const favoriteRoutes = require('./routes/favoriteRoutes');
 const jwt = require("jsonwebtoken");
 const resourceRoutes = require("./routes/resourceRoutes");
+const admin = require("./routes/admin");
+
 
 dotenv.config();
 
@@ -45,6 +47,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/resources", resourceRoutes);
 app.use("/api", favoriteRoutes);
+app.use("/api", admin);
+
 
 // ✅ Test API
 app.get("/", (req, res) => {

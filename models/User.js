@@ -10,6 +10,7 @@ const UserSchema = new mongoose.Schema({
   location: { type: String },
   profileImage: { type: String },
   backgroundImage: { type: String },
+  isAdmin: { type: Boolean, default: false },
   favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: "Resource" }],
   resetToken: { type: String },
   resetTokenExpires: { type: Date }
