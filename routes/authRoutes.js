@@ -169,5 +169,4 @@ router.get("/protected", async (req, res) => {
   }
 });
 
-
 module.exports = router;
