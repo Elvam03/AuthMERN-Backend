@@ -127,7 +127,7 @@ router.post("/login", async (req, res) => {
 
     if (!user) {
       console.log("User not found for email:", email);
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
