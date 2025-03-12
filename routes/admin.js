@@ -24,14 +24,29 @@ router.post("/add-resource", adminAuth, async (req, res) => {
   }
 });
 
+const Resource = require("../models/Resource");
+const User = require("../models/User");
+
 router.delete("/delete-resource/:id", adminAuth, async (req, res) => {
     try {
-      await Resource.findByIdAndDelete(req.params.id);
-      res.json({ message: "Resource deleted" });
+        const { id } = req.params;
+
+        // Find and delete the resource
+        const deletedResource = await Resource.findByIdAndDelete(id);
+        if (!deletedResource) {
+            return res.status(404).json({ message: "Resource not found" });
+        }
+
+        // Remove the deleted resource from all users' favorites
+        await User.updateMany({}, { $pull: { favorites: id } });
+
+        res.json({ message: "Resource deleted and removed from favorites" });
     } catch (error) {
-      res.status(500).json({ message: "Error deleting resource" });
+        console.error("Error deleting resource:", error);
+        res.status(500).json({ message: "Error deleting resource" });
     }
-  });
+});
+
   
 
 module.exports = router;
