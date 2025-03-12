@@ -24,8 +24,6 @@ router.post("/add-resource", adminAuth, async (req, res) => {
   }
 });
 
-const Resource = require("../models/Resource");
-const User = require("../models/User");
 
 router.delete("/delete-resource/:id", adminAuth, async (req, res) => {
     try {
