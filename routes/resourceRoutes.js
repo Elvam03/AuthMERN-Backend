@@ -6,9 +6,9 @@ const { authenticateUser } = require("../Middleware/authMiddleware");
 const router = express.Router();
 router.post("/", async (req, res) => {
     try {
-        const { title, content, author, category, type } = req.body;
+        const { title, content, author, type, causes, diagnosis, treatment, exercise } = req.body;
 
-        const newResource = new Resource({ title, content, author, category, type });
+        const newResource = new Resource({ title, content, author, type, causes, diagnosis, treatment, exercise });
         await newResource.save();
 
         res.status(201).json({ message: "Resource added successfully", resource: newResource });
