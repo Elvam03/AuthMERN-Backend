@@ -8,11 +8,14 @@ const profileRoutes = require("./routes/profileRoutes");
 const favoriteRoutes = require('./routes/favoriteRoutes');
 const jwt = require("jsonwebtoken");
 const resourceRoutes = require("./routes/resourceRoutes");
-const admin = require("./routes/admin");
+const adminResource = require("./routes/adminResource");
+const facilityRoutes = require("./routes/facilityRoutes");
+const advertisementRoutes = require("./routes/advertisementRoutes");
+const adminAdsRoutes = require("./routes/adminAds")
+const adminFacilityRoutes = require("./routes/adminFacilityRoutes")
 
 
 dotenv.config();
-
 const app = express();
 
 // Middleware
@@ -47,8 +50,11 @@ app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/resources", resourceRoutes);
 app.use("/api", favoriteRoutes);
-app.use("/api", admin);
-
+app.use("/api", adminResource);
+app.use("/api", facilityRoutes);
+app.use("/api/advertisements", advertisementRoutes);
+app.use("/api", adminAdsRoutes);
+app.use("/api", adminFacilityRoutes)
 
 // ✅ Test API
 app.get("/", (req, res) => {

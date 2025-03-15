@@ -74,6 +74,4 @@ router.put("/edit-resource/:id", adminAuth, async (req, res) => {
 });
 
 
-  
-
 module.exports = router;
